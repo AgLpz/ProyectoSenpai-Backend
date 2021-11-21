@@ -1,8 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { TOKEN_SECRET } = require("../middleware/jwt-validate");
-const { listaDeTareas } = require("../routes/tarea");
-
 const registro = async (req, res, next) => {
   try {
     if (req.body.mail && req.body.name && req.body.password) {
@@ -70,14 +68,6 @@ const login = async (req, res, next) => {
       },
       TOKEN_SECRET
     );
-
-    console.log("Login en auth, listaDeTareas", listaDeTareas);
-    res.status(200).json({
-      error: null,
-      data: "Login exitoso",
-      token,
-      listaDeTareas: listaDeTareas,
-    });
   } catch (error) {
     return next(error);
   }
@@ -106,7 +96,7 @@ module.exports = {
 };
 
 
-//JSON
+//JSON con la información de los locales.
 
 const local = [
   {
