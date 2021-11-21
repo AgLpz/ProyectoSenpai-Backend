@@ -17,10 +17,6 @@ app.use(
 
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("Hola");
-});
-
 app.use("/auth", authRouter);
 app.use("/tareas", tareasRouter);
 

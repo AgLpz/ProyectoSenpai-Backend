@@ -12,6 +12,6 @@ router.post("/login", login);
 
 router.get("/usuarios", verifyToken, getUsers);
 
-router.get("/hoteles", verifyToken, locales);
+router.get("/locales", locales);
 
 module.exports = router;
