@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { TOKEN_SECRET } = require("../middleware/jwt-validate");
+const db = require('../db');
+
 const registro = async (req, res, next) => {
   try {
     if (req.body.mail && req.body.name && req.body.password) {
@@ -11,10 +13,13 @@ const registro = async (req, res, next) => {
           .json({ success: false, message: "Formato de mail incorrecto" });
         return;
       }
+      const usuarioBd = await db.query("Select * from users where mail = $1", [
+        req.body.mail,
+        
+      ]);
+      const existeUser = usuarioBd.rowCount > 0;
 
-      const existeUser = usuarios.find((u) => {
-        return u.mail === req.body.mail;
-      });
+      
 
       if (existeUser) {
         res.status(400).json({ success: false, message: "Mail repetido" });
@@ -22,7 +27,6 @@ const registro = async (req, res, next) => {
       }
 
       const salt = await bcrypt.genSalt(10);
-      console.log("Salt", salt);
       const password = await bcrypt.hash(req.body.password, salt);
 
       const newUser = {
@@ -31,7 +35,10 @@ const registro = async (req, res, next) => {
         password: password,
       };
 
-      usuarios.push(newUser);
+      await db.query(
+        "Insert into users(name, mail, password) values ($1, $2, $3)",
+        [newUser.name, newUser.mail, newUser.password]
+      );
 
       return res.status(200).json({ success: true, newUser });
     } else {
@@ -86,6 +93,8 @@ const getUsers = async (req, res, next) => {
     return next(error);
   }
 };
+
+
 const locales = async (req, res, next) => {
   try {
     return res.json({ error: null, local });
@@ -102,7 +111,7 @@ module.exports = {
 };
 
 
-//JSON con la información de los locales.
+//Array de objetos que se pasará a formato .JSON con la información de los locales.
 
 const local = [
   {

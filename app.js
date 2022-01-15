@@ -1,5 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
+
+
+if (process.env.ENV !== "production") {
+  require("dotenv").config();
+}
+
+const { resolve } = require("path");
+const { config } = require("dotenv");
+config({ path: resolve(__dirname, "./.env") });
+
 
 const authRouter = require("./src/routes/auth");
 
