@@ -6,7 +6,6 @@ const path = require('path');
 if (process.env.ENV !== "production") {
   require("dotenv").config();
 }
-
 const { resolve } = require("path");
 const { config } = require("dotenv");
 config({ path: resolve(__dirname, "./.env") });
